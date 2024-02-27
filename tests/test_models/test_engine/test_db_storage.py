@@ -86,30 +86,30 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
-        """ Tests method to obtain an instance file storage"""
-        self.storage = FileStorage()
-        self.storage.reload()
-        dic = {"name": "Vecindad"}
+        """ Tests method for obtaining an instance db storage"""
+        storage = DBStorage
+        storage.reload()
+        dic = {"name": "Cundinamarca"}
         instance = State(**dic)
-        self.storage.new(instance)
-        self.storage.save()
-        self.storage = FileStorage()
-        get_instance = self.storage.get(State, instance.id)
+        storage.new(instance)
+        storage.save()
+        get_instance = storage.get(State, instance.id)
         self.assertEqual(get_instance, instance)
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
-        """ Tests count method file storage """
-        self.storage = FileStorage()
-        self.storage.reload()
-        dic = {"name": "Dallas"}
+        """ Tests count method db storage """
+        storage = DBStorage
+        storage.reload()
+        dic = {"name": "Vecindad"}
         state = State(**dic)
-        self.storage.new(state)
-        dic = {"name": "New"}
+        storage.new(state)
+        dic = {"name": "Mexico", "state_id": state.id}
         city = City(**dic)
-        self.storage.new(city)
-        self.storage.save()
-        c = self.storage.count()
-        self.assertEqual(len(self.storage.all()), c)
-
+        storage.new(city)
+        storage.save()
+        c = storage.count()
+        self.assertEqual(len(storage.all()), c)
